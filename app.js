@@ -10,18 +10,28 @@ loadEventListeners();
 
 // Load all event listeners
 function loadEventListeners() {
+    
     // Add task event
     form.addEventListener("submit", addTask);
+
+    // Remove task event
+    taskList.addEventListener("click", removeTask);
+
+    // Clear tasks event
+    clearBtn.addEventListener("click", clearTasks);
+
+    // Filter tasks event
+    filter.addEventListener("keyup", filterTasks);
 }
 
-// Add Task
+// Add Task 
 function addTask(e) {
 
     // Check for blank entries
     if(taskInput.value === "") {
         alert("Add a task");
 
-    // If an entry has been made
+    // An entry has been made
     } else {
         
         // Create li element
@@ -52,5 +62,49 @@ function addTask(e) {
     // Clear the input
     taskInput.value = "";
 
+    // Prevent default behavior of page reloading
     e.preventDefault();
+}
+
+// Remove Task
+function removeTask(e) {
+
+    // Check for icon clicked
+    if(e.target.parentElement.classList.contains("delete-item")) {
+
+        // Remove parent's (a tag) parent (li tag)
+        e.target.parentElement.parentElement.remove();
+    }
+}
+
+// Clear Tasks
+function clearTasks() {
+
+    // Either set taskList.innerHTML to blank or loop and removeChild (better performance)
+    while(taskList.firstChild) {
+        taskList.removeChild(taskList.firstChild);
+    }
+
+}
+
+// Filter Tasks
+function filterTasks(e) {
+
+    // Get value of input
+    const text = e.target.value.toLowerCase();
+
+    document.querySelectorAll(".collection-item").forEach(function(task){
+
+        // Assign temp variable to given text
+        const item = task.firstChild.textContent;
+
+        // Check for match
+        if(item.toLowerCase().indexOf(text) != -1) {
+            task.style.display = "block";
+
+        // There is no match
+        }  else {
+            task.style.display = "none";
+        }
+    });
 }
